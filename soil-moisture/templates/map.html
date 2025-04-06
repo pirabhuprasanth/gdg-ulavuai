@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Terrain Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <style>
+        #map {
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        const map = L.map('map').setView([13.154096, 79.778280], 18);
+
+        // Use OpenTopoMap tile layer for terrain view
+        L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+            maxZoom: 17,
+            attribution: 'Map data: © OpenStreetMap contributors, SRTM | Map style: © OpenTopoMap (CC-BY-SA)'
+        }).addTo(map);
+
+        const sensors = [
+            { lat: 13.119792, lng: 79.956617, id: 1 },
+            { lat: 13.1197925, lng: 79.9566175, id: 2 },
+        ];
+
+        sensors.forEach(sensor => {
+            L.marker([sensor.lat, sensor.lng])
+                .addTo(map)
+                .bindPopup(`Sensor ID: ${sensor.id}`);
+        });
+    </script>
+</body>
+</html>

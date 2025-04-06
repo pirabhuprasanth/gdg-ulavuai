@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>User Dashboard</h1>
+    <nav>
+      <a href="index.html">Home</a> |
+      <a href="booking.html">Book Equipment</a>
+    </nav>
+  </header>
+
+  <main>
+    <div id="user-info">
+      <h3>Welcome, <span id="username"></span></h3>
+      <button class="logout-button" onclick="logout()">Logout</button>
+    </div>
+
+    <section id="bookings">
+      <h3>Your Bookings</h3>
+      <div id="booking-list">
+        <!-- Booking cards will be dynamically inserted here -->
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2025 Farming Equipment Rentals. Cultivating Your Success.
+  </footer>
+
+  <script src="user.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const user = JSON.parse(localStorage.getItem("loggedInUser"));
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      document.getElementById("username").textContent = user.username;
+
+      const bookings = JSON.parse(localStorage.getItem("bookings")) || [];
+      const bookingsDiv = document.getElementById("booking-list");
+
+      if (bookings.length === 0) {
+        bookingsDiv.innerHTML = "<p>No bookings found.</p>";
+        return;
+      }
+
+      fetch("data/equipment.json")
+        .then(response => response.json())
+        .then(data => {
+          bookingsDiv.innerHTML = ""; // Clear any existing content
+          bookings.forEach(booking => {
+            const item = data.find(eq => eq.id == booking.equipmentId);
+            if (item) {
+              const card = document.createElement("div");
+              card.className = "booking-card";
+              card.innerHTML = `
+                <h4>${item.name}</h4>
+                <p>Start Date: ${booking.startDate}</p>
+                <p>End Date: ${booking.endDate}</p>
+                <p>Total Cost: ₹${booking.totalCost}</p>
+              `;
+              bookingsDiv.appendChild(card);
+            }
+          });
+        })
+        .catch(error => {
+          console.error("Error fetching equipment data:", error);
+          bookingsDiv.innerHTML = "<p style='color:red;'>Failed to load bookings.</p>";
+        });
+    });
+
+    function logout() {
+      localStorage.removeItem("loggedInUser");
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>

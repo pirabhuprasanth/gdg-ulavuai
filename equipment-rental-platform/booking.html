@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Equipment Booking</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Equipment Booking</h1>
+    <nav>
+      <a href="index.html">Home</a> |
+      <a href="dashboard.html">Dashboard</a>
+    </nav>
+  </header>
+
+  <main id="booking-section">
+    <img src="" alt="Equipment Image" id="equipment-image">
+    <div>
+      <h3 id="equipment-name">Equipment Name</h3>
+      <p id="equipment-description">Description</p>
+      <p id="equipment-price">Price</p>
+      <form id="bookingForm">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" required>
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" required>
+        <button type="submit">Confirm Booking</button>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    © 2023 Farming Equipment Rentals. Cultivating Your Success.
+  </footer>
+
+  <script src="booking.js"></script>
+</body>
+</html>

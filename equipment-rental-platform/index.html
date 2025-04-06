@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Equipment Rental</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <header>
+    <h1>Farming Equipment Rentals</h1>
+    <nav>
+      <a href="login.html">Login</a> |
+      <a href="register.html">Register</a> |
+      <a href="dashboard.html">Dashboard</a>
+    </nav>
+    <input type="text" id="searchBar" placeholder="Search equipment..." />
+  </header>
+
+  <main>
+    <aside class="sidebar">
+      <h3>Refine Listings</h3>
+      <label for="category">By Categories</label>
+      <select id="category">
+        <option value="">Please Select</option>
+        <!-- Add categories dynamically -->
+      </select>
+
+      <label for="zone">Select Zone</label>
+      <select id="zone">
+        <option value="">Please Select</option>
+        <!-- Add zones dynamically -->
+      </select>
+
+      <label for="type">Equipment Type</label>
+      <select id="type">
+        <option value="">Please Select</option>
+        <!-- Add types dynamically -->
+      </select>
+
+      <label for="usage">Usage (hours)</label>
+      <input type="number" id="usage" placeholder="Enter hours" />
+
+      <label for="equipmentName">Enter Equipment Name</label>
+      <input type="text" id="equipmentName" placeholder="Enter Equipment Name" />
+    </aside>
+
+    <section id="equipment-list" class="equipment-container">
+      <!-- Equipment cards will be dynamically inserted here -->
+    </section>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="modal">
+      <div class="modal-content">
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <h3>Book Equipment</h3>
+        <form id="bookingForm">
+          <label for="startDate">Start Date:</label>
+          <input type="date" id="startDate" required>
+          <label for="endDate">End Date:</label>
+          <input type="date" id="endDate" required>
+          <button type="submit">Confirm Booking</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    © 2025 Ulavu AI. Cultivating Your Success.
+  </footer>
+
+  <!-- Scripts -->
+  <!-- <script src="equipment-data.js"></script> If using inline data -->
+  <script src="scripts.js"></script> <!-- Your main JS logic -->
+</body>
+</html>

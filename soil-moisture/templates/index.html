@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UlavuAI - Soil Moisture Map</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <header class="bg-blue-600 text-white p-4">
+        <nav class="container mx-auto flex justify-between">
+            <h1 class="text-xl font-bold">UlavuAI</h1>
+            <ul class="flex space-x-4">
+                <li><a href="/" class="hover:underline">Dashboard</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto p-4">
+        <h2 class="text-2xl font-bold mb-4">Soil Moisture Map</h2>
+        <div id="map" class="w-full h-96 rounded-lg shadow-md"></div>
+        <div id="sensor-details" class="mt-4 p-4 bg-white rounded-lg shadow-md hidden">
+            <h3 class="text-lg font-bold">Sensor Details</h3>
+            <p id="sensor-id" class="text-gray-600"></p>
+            <p id="sensor-level" class="text-gray-600"></p>
+        </div>
+    </main>
+    <script>
+        const socket = io();
+        const map = L.map('map').setView([13.11, 79.95], 12); 
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 23,
+        }).addTo(map);
+
+        const sensorMarkers = {};
+       let selectedSensorId = null;
+
+        fetch('/api/sensors')
+            .then(response => response.json())
+            .then(data => {
+                data.sensors.forEach(sensor => {
+                    const marker = L.marker([sensor.lat, sensor.lng]).addTo(map);
+                    marker.bindPopup(`Sensor ${sensor.sensor_id}`);
+                    marker.on('click', () => {
+                        selectedSensorId = sensor.sensor_id;
+                        document.getElementById('sensor-details').classList.remove('hidden');
+                        document.getElementById('sensor-id').textContent = `Sensor ID: ${sensor.sensor_id}`;
+                        document.getElementById('sensor-level').textContent = `Moisture Level: ${sensor.level}%`;
+                    });
+                    sensorMarkers[sensor.sensor_id] = marker;
+                });
+            });
+
+        socket.on('moisture_update', (data) => {
+            data.sensors.forEach(sensor => {
+                const marker = sensorMarkers[sensor.sensor_id];
+                if (marker) {
+                    const newPopupContent = `
+                        Sensor ${sensor.sensor_id}
+                    `;
+                    marker.setPopupContent(newPopupContent);
+
+                    if (sensor.sensor_id === selectedSensorId) {
+                        document.getElementById('sensor-level').textContent = `Moisture Level: ${sensor.level}%`;
+                    }
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
